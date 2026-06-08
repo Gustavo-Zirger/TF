@@ -14,6 +14,7 @@ import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.Cab
 import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.CardapioPresenter;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.RecuperaListaCardapiosUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.RecuperarCardapioUC;
+import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.DefinirCardapioCorrenteUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.CardapioResponse;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;
 
@@ -22,11 +23,14 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;
 public class CardapioController {
     private RecuperarCardapioUC recuperaCardapioUC;
     private RecuperaListaCardapiosUC recuperaListaCardapioUC;
+    private DefinirCardapioCorrenteUC definirCardapioCorrenteUC;
 
     public CardapioController(RecuperarCardapioUC recuperaCardapioUC,
-                              RecuperaListaCardapiosUC recuperaListaCardapioUC) {
+                              RecuperaListaCardapiosUC recuperaListaCardapioUC,
+                              DefinirCardapioCorrenteUC definirCardapioCorrenteUC) {
         this.recuperaCardapioUC = recuperaCardapioUC;
         this.recuperaListaCardapioUC = recuperaListaCardapioUC;
+        this.definirCardapioCorrenteUC = definirCardapioCorrenteUC;
     }
 
     @GetMapping("/{id}")
@@ -53,4 +57,11 @@ public class CardapioController {
             .toList();
          return lstCardapios;
     }
+
+    @GetMapping("/definir/{id}")
+    @CrossOrigin("*")
+    public long definirCardapioCorrente(@PathVariable(value="id") long id){
+        return definirCardapioCorrenteUC.run(id);
+    }
+
 }
