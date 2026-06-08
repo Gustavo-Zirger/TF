@@ -6,7 +6,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "pizzaria.imposto")
 public class ImpostoConfigProperties {
+    
     private String leiVigente;
-    public String getLeiVigente() { return leiVigente; }
-    public void setLeiVigente(String leiVigente) { this.leiVigente = leiVigente; }
+
+    public String getLeiVigente() { 
+        return leiVigente; 
+    }
+    public void setLeiVigente(String leiVigente) { 
+        this.leiVigente = leiVigente; 
+    }
 }
