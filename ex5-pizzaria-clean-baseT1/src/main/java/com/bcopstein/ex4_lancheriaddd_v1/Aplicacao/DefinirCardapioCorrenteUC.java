@@ -16,4 +16,8 @@ public class DefinirCardapioCorrenteUC {
         cardapioService.defineCardapioCorrente(idCardapio);
         return idCardapio;
     }
+
+    public long getCardapioCorrente() {
+        return cardapioService.getCardapioCorrente();
+    }
 }
