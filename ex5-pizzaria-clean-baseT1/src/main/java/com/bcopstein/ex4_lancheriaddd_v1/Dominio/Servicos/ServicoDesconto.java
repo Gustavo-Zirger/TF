@@ -15,10 +15,12 @@ public class ServicoDesconto {
     private Map<String, Desconto> regra;
     
     @Autowired
-    public ServicoDesconto() {
+    public ServicoDesconto(String id) {
+        this.desconto = id;
         this.regra = new HashMap<>();
-        regra.put("Desconto 7%", new Desconto("Desconto 7%", valor -> valor * 0.07));
-                
+        // criada regras de desconto, mas falta aplicar a regra certa no 1
+        regra.put("1", new Desconto("1", valor -> valor * 0.07));
+        regra.put("2", new Desconto("2", valor -> valor * 0.1));           
     }
 
     public double calcular(double valorDaVenda) {
