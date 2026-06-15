@@ -44,6 +44,7 @@ public class DescontoController {
     @GetMapping("/corrente")
     @CrossOrigin("*")
     public String recuperaPoliticaDescontoCorrente() {
-        return recuperaDescontoCorrenteUC.run();
+        String id = recuperaDescontoCorrenteUC.run();
+        return "Os descontos disponíveis são: " + id;
     }
 }
