@@ -2,6 +2,7 @@ package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
 
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,34 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
                 });
 
         return pedidos.isEmpty() ? null : pedidos.get(0);
+    }
+
+    @Override
+    public List<Pedido> recuperaPedidosEntreguesEntreDatas(LocalDate inicio, LocalDate fim) {
+        String sql = "SELECT id, cliente_cpf, status, valor, impostos, desconto, valor_cobrado, data_hora " +
+                "FROM pedidos WHERE status = 'ENTREGUE' AND data_hora >= ? AND data_hora < ? ORDER BY data_hora DESC";
+
+        return jdbcTemplate.query(
+                sql,
+                ps -> {
+                    ps.setTimestamp(1, Timestamp.valueOf(inicio.atStartOfDay()));
+                    ps.setTimestamp(2, Timestamp.valueOf(fim.plusDays(1).atStartOfDay()));
+                },
+                (rs, rowNum) -> {
+                    long id = rs.getLong("id");
+                    String clienteCpf = rs.getString("cliente_cpf");
+                    String status = rs.getString("status");
+                    double valor = rs.getDouble("valor");
+                    double impostos = rs.getDouble("impostos");
+                    double desconto = rs.getDouble("desconto");
+                    double valorCobrado = rs.getDouble("valor_cobrado");
+                    java.sql.Timestamp dataHora = rs.getTimestamp("data_hora");
+                    var cliente = clientesRepository.recuperaClientePorCpf(clienteCpf);
+                    var itens = recuperaItens(id);
+                    Pedido.Status pedidoStatus = Pedido.Status.valueOf(status);
+                    return new Pedido(id, cliente, dataHora.toLocalDateTime(), itens, pedidoStatus,
+                            valor, impostos, desconto, valorCobrado);
+                });
     }
 
     private List<ItemPedido> recuperaItens(long pedidoId) {

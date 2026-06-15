@@ -1,5 +1,6 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +107,11 @@ public class PedidoService {
         return pedidoRepository.recuperaPedido(id);
     }
 
-    public java.util.List<Pedido> recuperaTodosPedidos() {
+    public List<Pedido> recuperaTodosPedidos() {
         return pedidoRepository.recuperaTodos();
+    }
+
+    public List<Pedido> listarPedidosEntreguesEntreDatas(LocalDate inicio, LocalDate fim) {
+        return pedidoRepository.recuperaPedidosEntreguesEntreDatas(inicio, fim);
     }
 }
