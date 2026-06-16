@@ -1,16 +1,23 @@
 package com.bcopstein.ex4_lancheriaddd_v1;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import org.mockito.Mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests.ItemPedidoRequest;
@@ -19,11 +26,11 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.EstoqueRepository;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.ProdutosRepository;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Cliente;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Ingrediente;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.ItemEstoque;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Receita;
-import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Ingrediente;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoService;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.ServicoDesconto;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.ServicoImposto;
@@ -78,7 +85,7 @@ class PedidoServiceTest {
         // Configurar comportamentos padrão dos mocks
         when(clientesRepository.recuperaClientePorCpf("12345678900")).thenReturn(cliente);
         when(produtosRepository.recuperaProdutoPorid(1L)).thenReturn(produto);
-        when(servicoDesconto.calcular(anyDouble())).thenReturn(0.0);
+        when(servicoDesconto.calcular(any(Cliente.class),anyDouble())).thenReturn(0.0);
         when(servicoImposto.calcular(anyDouble())).thenReturn(0.0);
     }
 
@@ -215,7 +222,7 @@ class PedidoServiceTest {
         // Cenário: Estoque suficiente e cálculos de preço
         ItemEstoque itemEstoque = new ItemEstoque(ingrediente, 10);
         when(estoqueRepository.recuperaItemEstoquePorIngrediente(1L)).thenReturn(itemEstoque);
-        when(servicoDesconto.calcular(5500.0)).thenReturn(385.0); // 7% de desconto
+        when(servicoDesconto.calcular(cliente, 5500.0)).thenReturn(385.0); // 7% de desconto
         when(servicoImposto.calcular(5500.0)).thenReturn(550.0);   // 10% de imposto
 
         // Criar pedido request

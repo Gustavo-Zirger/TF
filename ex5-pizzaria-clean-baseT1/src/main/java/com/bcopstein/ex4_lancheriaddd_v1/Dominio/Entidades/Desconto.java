@@ -1,12 +1,12 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class Desconto {
     private String identificador;
-    private Function<Double,Double> calculaDesconto;
+    private BiFunction<Double,Integer,Double> calculaDesconto;
 
-    public Desconto(String id,Function<Double,Double> calculo){
+    public Desconto(String id,BiFunction<Double,Integer,Double> calculo){
         this.identificador = id;
         this.calculaDesconto = calculo;
     }
@@ -15,7 +15,7 @@ public class Desconto {
     public String getId(){
         return identificador;
     }
-    public double calculaDesconto(double valor){
-        return calculaDesconto.apply(valor);
+    public double calculaDesconto(double valor,int pedidosRecentes){
+        return calculaDesconto.apply(valor,pedidosRecentes);
     }
 }
