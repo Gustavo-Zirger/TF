@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +32,7 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.ProdutosRepository;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Cliente;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Ingrediente;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.ItemEstoque;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.ItemPedido;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Receita;
@@ -279,6 +284,55 @@ class PedidoServiceTest {
         assertNotNull(pedidoRetornado);
         assertEquals(1L, pedidoRetornado.getId());
         assertEquals(Pedido.Status.APROVADO, pedidoRetornado.getStatus());
+    }
+
+    @Test
+    @DisplayName("Deve cancelar pedido aprovado e restaurar o estoque")
+    void testeCancelarPedidoAprovado() {
+        Pedido pedidoExistente = new Pedido(
+            1L,
+            cliente,
+            LocalDateTime.now(),
+            List.of(new ItemPedido(produto, 1)),
+            Pedido.Status.APROVADO,
+            5500.0,
+            0.0,
+            0.0,
+            5500.0
+        );
+
+        when(pedidoRepository.recuperaPedido(1L)).thenReturn(pedidoExistente);
+        when(estoqueRepository.recuperaItemEstoquePorIngrediente(1L)).thenReturn(new ItemEstoque(ingrediente, 10));
+        when(pedidoRepository.atualiza(any(Pedido.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        boolean sucesso = pedidoService.cancelarPedido(1L);
+
+        assertTrue(sucesso);
+        verify(estoqueRepository).atualizaQuantidade(1L, 11);
+        verify(pedidoRepository).atualiza(any(Pedido.class));
+    }
+
+    @Test
+    @DisplayName("Não deve cancelar pedido entregue")
+    void testeNaoCancelarPedidoEntregue() {
+        Pedido pedidoExistente = new Pedido(
+            1L,
+            cliente,
+            LocalDateTime.now(),
+            new ArrayList<>(),
+            Pedido.Status.ENTREGUE,
+            5500.0,
+            0.0,
+            0.0,
+            5500.0
+        );
+
+        when(pedidoRepository.recuperaPedido(1L)).thenReturn(pedidoExistente);
+
+        boolean sucesso = pedidoService.cancelarPedido(1L);
+
+        assertFalse(sucesso);
+        verify(pedidoRepository, never()).atualiza(any(Pedido.class));
     }
 
     @Test
