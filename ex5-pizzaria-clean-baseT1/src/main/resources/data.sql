@@ -1,6 +1,9 @@
 -- Inserção dos clientes
-INSERT INTO clientes (cpf, nome, celular, endereco, email) VALUES ('9001', 'Huguinho Pato', '51985744566', 'Rua das Flores, 100', 'huguinho.pato@email.com');
-INSERT INTO clientes (cpf, nome, celular, endereco, email) VALUES ('9002', 'Luizinho Pato', '5199172079', 'Av. Central, 200', 'zezinho.pato@email.com');
+-- Inserindo o ADMIN com a senha "admin"
+INSERT INTO clientes (cpf, nome, celular, endereco, email, senha) VALUES ('0000', 'Administrador', '000', 'Sede', 'admin@pizzaria.com', 'admin');
+-- Inserindo o cliente Huguinho Pato com a senha "senha123"
+INSERT INTO clientes (cpf, nome, celular, endereco, email, senha) VALUES ('9001', 'Huguinho Pato', '51985744566', 'Rua das Flores, 100', 'huguinho.pato@email.com', 'senha123');
+INSERT INTO clientes (cpf, nome, celular, endereco, email, senha) VALUES ('9002', 'Luizinho Pato', '5199172079', 'Av. Central, 200', 'zezinho.pato@email.com', 'senha123');
 
 -- Inserção dos ingredientes
 INSERT INTO ingredientes (id, descricao) VALUES (1, 'Disco de pizza');
@@ -77,3 +80,4 @@ INSERT INTO pedidos (cliente_cpf, status, valor, impostos, desconto, valor_cobra
 INSERT INTO pedido_item (pedido_id, cliente_cpf, produto_id, quantidade) VALUES (1, '9001', 1, 2);
 INSERT INTO pedido_item (pedido_id, cliente_cpf, produto_id, quantidade) VALUES (2, '9002', 2, 1);
 INSERT INTO pedido_item (pedido_id, cliente_cpf, produto_id, quantidade) VALUES (3, '9001', 3, 1);
+
