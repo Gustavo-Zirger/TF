@@ -6,10 +6,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "itensEstoque")
+@Table(name = "ITENSESTOQUE")
 public class ItemEstoqueEntity {
     
     @Id
+    private Long id;
     @Column(name = "ingrediente_id")
     private Long ingredienteId;
     
@@ -17,11 +18,13 @@ public class ItemEstoqueEntity {
 
     protected ItemEstoqueEntity() {}
 
-    public ItemEstoqueEntity(Long ingredienteId, int quantidade) {
+    public ItemEstoqueEntity(Long id, Long ingredienteId, int quantidade) {
+        this.id = id;
         this.ingredienteId = ingredienteId;
         this.quantidade = quantidade;
     }
 
+    public Long getId(){ return id; }
     public Long getIngredienteId() { return ingredienteId; }
     public int getQuantidade() { return quantidade; }
     public void setQuantidade(int quantidade) { this.quantidade = quantidade; }

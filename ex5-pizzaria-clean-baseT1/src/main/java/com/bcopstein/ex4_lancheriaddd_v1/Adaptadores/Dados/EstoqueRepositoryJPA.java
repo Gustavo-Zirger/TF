@@ -23,7 +23,7 @@ public class EstoqueRepositoryJPA implements EstoqueRepository {
 
     @Override
     public ItemEstoque recuperaItemEstoquePorIngrediente(long ingredienteId) {
-        ItemEstoqueEntity estoqueEntity = jpaRepository.findById(ingredienteId).orElse(null);
+        ItemEstoqueEntity estoqueEntity = jpaRepository.findByIngredienteId(ingredienteId).orElse(null);
         if (estoqueEntity == null) return null;
 
         Ingrediente ingrediente = ingredienteJpa.findById(ingredienteId).orElse(null);
@@ -33,8 +33,8 @@ public class EstoqueRepositoryJPA implements EstoqueRepository {
 
     @Override
     public void atualizaQuantidade(long ingredienteId, int quantidade) {
-        ItemEstoqueEntity estoqueEntity = jpaRepository.findById(ingredienteId)
-                .orElse(new ItemEstoqueEntity(ingredienteId, 0));
+        ItemEstoqueEntity estoqueEntity = jpaRepository.findByIngredienteId(ingredienteId)
+                .orElseThrow(() -> new IllegalArgumentException("Ingrediente não encontrado no estoque"));
         
         estoqueEntity.setQuantidade(quantidade);
         jpaRepository.save(estoqueEntity);
